@@ -3,6 +3,12 @@ import { app } from '../../config/base'
 import { connect } from 'react-redux'
 
 class Hom extends Component {
+   constructor(props) {
+      super(props)
+      this.state = {
+         user: this.props.auth.user
+      }
+   }
    logout = e => {
       e.preventDefault()
       app.auth().signOut().then(() => {
@@ -15,9 +21,12 @@ class Hom extends Component {
    }
 
    render() {
+      const { auth } = this.props
       return (
          <div>
-            <h3>Home ... {}</h3>
+            {this.state.user === null ? (
+               <h1> hy..</h1>
+            ) : null}
             <a href="" className="btn btn-danger btn-sm"
                onClick={this.logout}
             >Logout</a>

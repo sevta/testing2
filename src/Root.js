@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { Switch , Route , Redirect , withRouter } from 'react-router-dom';
+import { connect } from 'react-redux'
+import { app } from './config/base'
+
 import Login from './component/Auth/Login'
 import Home from './component/Home/Home'
 import Profile from './component/Profile/Profile'
 import Register from './component/Auth/Register'
 import About from './component/About/About'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { app } from './config/base'
 import Navbar from './component/_partials/Navbar'
+import StartScreen from './component/common/StartScreen'
+import IndexLogin from './component/Auth/IndexLogin'
+
+import './component/styles/global.css'
 
 const PrivateRoutes = ({component: Component , auth , ...rest}) => 
    <Route
 		{...rest}
 		render={props => 
-			auth ? <Component {...props} /> : <Redirect to={{pathname: '/login' , state: {from: props.location}}} />
+			auth 
+			? <Component {...props} /> 
+			: <Redirect to={{pathname: '/index' , state: {from: props.location}}} />
 		}
    />
 
@@ -22,7 +29,9 @@ const PublicRoutes = ({component: Component , auth , ...rest}) =>
 	<Route
 	   {...rest}
 	   render={props =>
-		auth === false ? <Component {...props} /> : <Redirect to={{pathname: '/' , state: {from: props.location}}} />
+			auth === false 
+			? <Component {...props} /> 
+			: <Redirect to={{pathname: '/' , state: {from: props.location}}} />
 	   }
 	/>
 
@@ -71,12 +80,14 @@ class Root extends Component {
 					<Switch>
 						<PublicRoutes auth={auth} path='/register' component={Register} />
 						<PublicRoutes auth={auth} path='/login' component={Login} />
+						<PublicRoutes auth={auth} path='/index' component={IndexLogin} />
+						
 						<PrivateRoutes auth={auth} exact path='/' component={Home} />
 						<PrivateRoutes auth={auth} path='/about' component={About} />
 						<PrivateRoutes auth={auth} path='/profile' component={Profile} />
 					</Switch>
 				</div>
-			) : <p>Loading ... </p> }
+			) : <StartScreen /> }
 		</div>
 	);
    }
