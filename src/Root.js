@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Switch , Route , Redirect , withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { app } from './config/base'
+import { app , base } from './config/base'
 
+// component -----------------------------
 import Login from './component/Auth/Login'
 import Home from './component/Home/Home'
 import Profile from './component/Profile/Profile'
@@ -13,8 +14,10 @@ import Navbar from './component/_partials/Navbar'
 import StartScreen from './component/common/StartScreen'
 import IndexLogin from './component/Auth/IndexLogin'
 
+// style -----------------------------
 import './component/styles/global.css'
 
+// authed routes -------------------------------------------------
 const PrivateRoutes = ({component: Component , auth , ...rest}) => 
    <Route
 		{...rest}
@@ -54,6 +57,15 @@ class Root extends Component {
 					payload: true,
 					user: user
 				})
+				const users = {
+					id: user.uid,
+					username: user.displayName,
+					email: user.email,
+					avatar: user.photoURL
+				}
+				base.post(`users/${user.uid}` , {
+					data: users
+				})
 			} else {
 				this.setState({ auth: false , isLoggedin: true })
 				this.props.dispatch({
@@ -83,8 +95,8 @@ class Root extends Component {
 						<PublicRoutes auth={auth} path='/index' component={IndexLogin} />
 						
 						<PrivateRoutes auth={auth} exact path='/' component={Home} />
-						<PrivateRoutes auth={auth} path='/about' component={About} />
-						<PrivateRoutes auth={auth} path='/profile' component={Profile} />
+						<PrivateRoutes auth={auth} exact path='/about' component={About} />
+						<PrivateRoutes auth={auth} exact path='/profile' component={Profile} />
 					</Switch>
 				</div>
 			) : <StartScreen /> }
