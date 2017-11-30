@@ -16,6 +16,28 @@ class Profile extends Component {
       const user = app.auth().currentUser
       this.setState({ user })
       console.log('will mount')
+      console.log(app.storage())
+   }
+
+   uploadFile = e => {
+      console.log(e.target.files)
+      const storageRef = app.storage().ref('/profile/')
+      const file = e.target.files[0]
+      const uploadTask = storageRef.child(`background/${this.state.user.uid}`).put(file)
+      uploadTask.on('state_changed' , snapshot => {
+         let progress = (snapshot.bytesTranferred / snapshot.totalBytes) * 100
+         console.log('upload is' , progress)
+      } , err => {
+         console.log('err' , err)
+      } , () => {
+         const downloadURL = uploadTask.snapshot.downloadURL
+         console.log(downloadURL)
+         base.post(`users/${this.state.user.uid}` , {
+            data: {
+               background: downloadURL
+            }
+         })
+      })
    }
 
    componentDidMount() {
@@ -42,6 +64,14 @@ class Profile extends Component {
                   src={this.state.user.photoURL} alt=""/>
                </Pic>
                <Username>{this.state.user.displayName}</Username>
+               <input type='file' className="btn btn-success btn-sm"
+                  onChange={this.uploadFile}
+                  style={{
+                     position: 'absolute',
+                     right: 30,
+                     bottom: 30
+                  }}
+               />
             </HeaderProfile>
          </div>
       );
@@ -56,11 +86,12 @@ const Username = Styled.div`
 const HeaderProfile = Styled.div`
    width: 100%;
    height: 400px;
-   background: white;
+   background: ${props => props.auth ? `url(${props.pic})` : 'white'};
    display: flex;
    justify-content: center;
    align-items: center;
    flex-direction: column;
+   position: relative;
 `
 const Pic = Styled.div`
    width: 120px;

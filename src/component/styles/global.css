@@ -1,1 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Pacifico");
+.switch-wrapper {
+   position: relative;
+}
+ 
+.switch-wrapper > div {
+   position: absolute;
+}

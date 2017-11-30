@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Switch , Route , Redirect , withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { app , base } from './config/base'
+import { AnimatedSwitch } from 'react-router-transition'
 
 // component -----------------------------
 import Login from './component/Auth/Login'
@@ -13,6 +14,7 @@ import PropTypes from 'prop-types'
 import Navbar from './component/_partials/Navbar'
 import StartScreen from './component/common/StartScreen'
 import IndexLogin from './component/Auth/IndexLogin'
+import Reactmotion from './component/other/Reactmotion'
 
 // style -----------------------------
 import './component/styles/global.css'
@@ -89,7 +91,7 @@ class Root extends Component {
 			{ isLoggedin ? (
 				<div>
 					{ auth ? <Navbar /> : null }
-					<Switch>
+					<Switch location={this.props.location}>
 						<PublicRoutes auth={auth} path='/register' component={Register} />
 						<PublicRoutes auth={auth} path='/login' component={Login} />
 						<PublicRoutes auth={auth} path='/index' component={IndexLogin} />
@@ -97,6 +99,7 @@ class Root extends Component {
 						<PrivateRoutes auth={auth} exact path='/' component={Home} />
 						<PrivateRoutes auth={auth} exact path='/about' component={About} />
 						<PrivateRoutes auth={auth} exact path='/profile' component={Profile} />
+						<PrivateRoutes auth={auth} exact path='/other' component={Reactmotion} />
 					</Switch>
 				</div>
 			) : <StartScreen /> }

@@ -12,4 +12,5 @@ const config = {
 
 export const app = firebase.initializeApp(config)
 export const gmailProvider = new firebase.auth.GoogleAuthProvider()
+export const facebookPorvider = new firebase.auth.FacebookAuthProvider()
 export const base = Rebase.createClass(app.database())

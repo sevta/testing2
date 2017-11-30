@@ -56,7 +56,7 @@ class Hom extends Component {
    render() {
       const { user , allUsers , loading } = this.state
       return (
-         <div className='container'>
+         <div className='container transition-item' style={{marginTop: 40}}>
             {loading ? (
                <h5> Loading.. </h5>
             ) : (
